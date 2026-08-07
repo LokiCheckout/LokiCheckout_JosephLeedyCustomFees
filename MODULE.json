@@ -1,0 +1,10 @@
+{
+    "module_name": "LokiCheckout_JosephLeedyCustomFees",
+    "composer_name": "loki-checkout/magento2-joseph-leedy-custom-fees",
+    "sequence": [
+        "JosephLeedy_CustomFees",
+        "LokiCheckout_Core",
+        "Loki_Components",
+        "Loki_CssUtils"
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "name": "loki-checkout/magento2-joseph-leedy-custom-fees",
+    "version": "1.0.0",
+    "description": "Compatibility module for the JosephLeedy CustomFees module",
+    "keywords": [
+        "loki-checkout",
+        "loki-checkout-category-other"
+    ],
+    "type": "magento2-module",
+    "require": {
+        "joseph-leedy/module-custom-fees": "^1.5",
+        "loki-checkout/magento2-core": "^2.0",
+        "loki/magento2-components": "^2.0",
+        "loki/magento2-css-utils": "^1.0",
+        "magento/framework": "^103.0"
+    },
+    "license": "OSL-3.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "LokiCheckout\\JosephLeedyCustomFees\\": ""
+        }
+    },
+    "extra": {
+        "label": "JosephLeedy Custom Fees"
+    }
+}

@@ -1,0 +1,61 @@
+<?php
+declare(strict_types=1);
+
+use JosephLeedy\CustomFees\Model\DisplayType;
+use Loki\Components\Factory\ViewModelFactory;
+use Loki\CssUtils\Util\CssClass;
+use LokiCheckout\Core\ViewModel\PriceFormatter;
+use LokiCheckout\JosephLeedyCustomFees\ViewModel\CustomFees;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magento\Quote\Api\Data\TotalSegmentInterface;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelFactory $viewModelFactory */
+/** @var CssClass $css */
+/** @var PriceFormatter $priceFormatter */
+
+$total = $block->getTotal();
+$customFeeSegments = $total->getExtensionAttributes()?->getCustomFeeSegments();
+
+if (empty($customFeeSegments)) {
+    return;
+}
+
+/** @var CustomFees $customFeesViewModel */
+$customFeesViewModel = $viewModelFactory->create(CustomFees::class);
+$priceFormatter = $viewModelFactory->create(PriceFormatter::class);
+$displayType = $customFeesViewModel->getDisplayType();
+?>
+<?php /** @var TotalSegmentInterface $customFeeSegment */ ?>
+<?php foreach ($customFeeSegments as $customFeeSegment): ?>
+    <?php if ($customFeeSegment->getValue() === 0) {
+        continue;
+    } ?>
+    <?php $feeCode = 'custom-fee-' . $customFeeSegment->getCode(); ?>
+    <?php if ($displayType !== DisplayType::IncludingTax): ?>
+        <dt class="total label <?= /* @noEscape */ $css('', $feeCode . '-label') ?>">
+            <?php if ($displayType === DisplayType::Both): ?>
+                <?= $escaper->escapeHtml(__('%1 Excl. Tax', $customFeeSegment->getTitle() ?? '')) ?>
+            <?php else: ?>
+                <?= $escaper->escapeHtml($customFeeSegment->getTitle() ?? '') ?>
+            <?php endif; ?>
+        </dt>
+        <dd class="total value <?= /* @noEscape */ $css('text-right', $feeCode . '-value') ?>">
+            <?= /* @noEscape */ $priceFormatter->format($customFeeSegment->getValue()) ?>
+        </dd>
+    <?php endif; ?>
+    <?php if ($displayType !== DisplayType::ExcludingTax): ?>
+        <dt class="total label <?= /* @noEscape */ $css('', $feeCode . '-label') ?>">
+            <?php if ($displayType === DisplayType::Both): ?>
+                <?= $escaper->escapeHtml(__('%1 Incl. Tax', $customFeeSegment->getTitle() ?? '')) ?>
+            <?php else: ?>
+                <?= $escaper->escapeHtml($customFeeSegment->getTitle() ?? '') ?>
+            <?php endif; ?>
+        </dt>
+        <dd class="total value <?= /* @noEscape */ $css('text-right', $feeCode . '-value') ?>">
+            <?= /* @noEscape */ $priceFormatter->format($customFeesViewModel->getValueWithTax($customFeeSegment)) ?>
+        </dd>
+    <?php endif; ?>
+<?php endforeach; ?>
