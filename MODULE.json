@@ -5,7 +5,9 @@
         "JosephLeedy_CustomFees",
         "LokiCheckout_Core",
         "Loki_Components",
-        "Loki_CssUtils"
+        "Loki_CssUtils",
+        "Magento_Quote",
+        "Magento_Store"
     ],
     "phpcs_severity": "7",
     "phpstan_level": "5"
