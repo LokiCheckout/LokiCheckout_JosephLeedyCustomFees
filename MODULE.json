@@ -6,5 +6,7 @@
         "LokiCheckout_Core",
         "Loki_Components",
         "Loki_CssUtils"
-    ]
+    ],
+    "phpcs_severity": "7",
+    "phpstan_level": "5"
 }
