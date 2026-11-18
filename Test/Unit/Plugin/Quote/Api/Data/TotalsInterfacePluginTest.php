@@ -96,9 +96,7 @@ class TotalsInterfacePluginTest extends TestCase
             'grand_total' => $grandTotalSegment,
         ];
 
-        $extension = $this->getMockBuilder(TotalSegmentExtensionInterface::class)
-            ->addMethods(['setCustomFeeSegments'])
-            ->getMock();
+        $extension = $this->createExtensionMock('setCustomFeeSegments');
         $extension->expects($this->once())
             ->method('setCustomFeeSegments')
             ->with(['example_fee' => $feeSegment]);
@@ -127,5 +125,16 @@ class TotalsInterfacePluginTest extends TestCase
         $subject = $this->createMock(TotalsInterface::class);
 
         $this->assertSame($result, $this->plugin->afterGetTotalSegments($subject, $result));
+    }
+
+    private function createExtensionMock(string $method): TotalSegmentExtensionInterface&MockObject
+    {
+        if (method_exists(TotalSegmentExtensionInterface::class, $method)) {
+            return $this->createMock(TotalSegmentExtensionInterface::class);
+        }
+
+        return $this->getMockBuilder(TotalSegmentExtensionInterface::class)
+            ->addMethods([$method])
+            ->getMock();
     }
 }

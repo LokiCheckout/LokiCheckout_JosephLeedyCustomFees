@@ -35,9 +35,7 @@ class CustomFeesTest extends TestCase
         $taxDetails = $this->createMock(CustomFeeTaxDetailsInterface::class);
         $taxDetails->method('getValueWithTax')->willReturn(12.1);
 
-        $extensionAttributes = $this->getMockBuilder(TotalSegmentExtensionInterface::class)
-            ->addMethods(['getCustomFeeTaxDetails'])
-            ->getMock();
+        $extensionAttributes = $this->createExtensionMock('getCustomFeeTaxDetails');
         $extensionAttributes->method('getCustomFeeTaxDetails')->willReturn($taxDetails);
 
         $totalSegment = $this->createMock(TotalSegmentInterface::class);
@@ -49,9 +47,7 @@ class CustomFeesTest extends TestCase
 
     public function testGetValueWithTaxFallsBackToValueWithoutTaxDetails(): void
     {
-        $extensionAttributes = $this->getMockBuilder(TotalSegmentExtensionInterface::class)
-            ->addMethods(['getCustomFeeTaxDetails'])
-            ->getMock();
+        $extensionAttributes = $this->createExtensionMock('getCustomFeeTaxDetails');
         $extensionAttributes->method('getCustomFeeTaxDetails')->willReturn(null);
 
         $totalSegment = $this->createMock(TotalSegmentInterface::class);
@@ -68,5 +64,16 @@ class CustomFeesTest extends TestCase
         $totalSegment->method('getValue')->willReturn(10.0);
 
         $this->assertSame(10.0, $this->viewModel->getValueWithTax($totalSegment));
+    }
+
+    private function createExtensionMock(string $method): TotalSegmentExtensionInterface&MockObject
+    {
+        if (method_exists(TotalSegmentExtensionInterface::class, $method)) {
+            return $this->createMock(TotalSegmentExtensionInterface::class);
+        }
+
+        return $this->getMockBuilder(TotalSegmentExtensionInterface::class)
+            ->addMethods([$method])
+            ->getMock();
     }
 }
