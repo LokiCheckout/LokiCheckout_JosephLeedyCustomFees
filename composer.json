@@ -28,8 +28,5 @@
         "psr-4": {
             "LokiCheckout\\JosephLeedyCustomFees\\": ""
         }
-    },
-    "extra": {
-        "label": "JosephLeedy Custom Fees"
     }
 }
